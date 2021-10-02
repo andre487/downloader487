@@ -4,6 +4,8 @@ boto3==1.18.53
 botocore==1.21.53
 click==8.0.1
 jmespath==0.10.0
+mypy==0.910
+mypy-extensions==0.4.3
 pkg_resources==0.0.0
 pycodestyle==2.7.0
 pyinstaller==4.5.1
@@ -12,5 +14,6 @@ python-dateutil==2.8.2
 s3transfer==0.5.0
 six==1.16.0
 toml==0.10.2
+typing-extensions==3.10.0.2
 urllib3==1.26.7
 youtube-dl==2021.6.6

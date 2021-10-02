@@ -1,5 +1,5 @@
 import os
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional, Set
 
 from youtube_dl import YoutubeDL
 
@@ -32,13 +32,13 @@ class Ydl:
         )
 
         self._ydl = YoutubeDL(params=params, auto_init=True)
-        self._current_files = set()
-        self._all_files = set()
+        self._current_files: Set[str] = set()
+        self._all_files: Set[str] = set()
 
-    def __enter__(self):
+    def __enter__(self) -> 'Ydl':
         return self
 
-    def __exit__(self, *_exc_info):
+    def __exit__(self, *_exc_info: List[Any]) -> None:
         if self._cleanup:
             for file_path in self._all_files:
                 os.unlink(file_path)
@@ -55,5 +55,5 @@ class Ydl:
 
         return result
 
-    def on_progress(self, data: Dict):
+    def on_progress(self, data: Dict) -> None:
         self._current_files.add(data['filename'])

@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 
 import boto3
 
@@ -6,7 +7,7 @@ import boto3
 class Uploader:
     def __init__(
             self, s3_endpoint: str, s3_region: str, s3_bucket: str,
-            s3_access: str, s3_secret: str,
+            s3_access: Optional[str], s3_secret: Optional[str],
     ) -> None:
         self._s3_bucket = s3_bucket
 
