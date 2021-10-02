@@ -10,8 +10,13 @@ class DownloadError(Exception):
 
 
 class Ydl:
-    def __init__(self, download_dir: str = '/tmp/downloader487', params: Optional[Dict] = None, playlist: bool = False):
+    def __init__(
+        self, download_dir: str = '/tmp/downloader487',
+        params: Optional[Dict] = None, playlist: bool = False,
+        cleanup: bool = True,
+    ):
         self._download_dir = download_dir
+        self._cleanup = cleanup
         if params is None:
             params = {}
 
@@ -29,6 +34,14 @@ class Ydl:
         self._ydl = YoutubeDL(params=params, auto_init=True)
         self._current_files = set()
         self._all_files = set()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *_exc_info):
+        if self._cleanup:
+            for file_path in self._all_files:
+                os.unlink(file_path)
 
     def download(self, urls: List[str]) -> List[str]:
         res_code = self._ydl.download(urls)
