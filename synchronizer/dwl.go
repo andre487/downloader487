@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 
@@ -36,11 +35,13 @@ func DownloadAll(params DwlParams) error {
 		return err
 	}
 
+	Logger.Info("Got", len(result.Contents), "objects")
 	downloader := s3manager.NewDownloader(s3Session)
 
 	for _, x := range result.Contents {
 		destPath := filepath.Join(params.DownloadDir, *x.Key)
 		destDir := filepath.Dir(destPath)
+		Logger.Info("Download start:", destPath)
 
 		if err := ensureDir(destDir); err != nil {
 			return err
@@ -59,7 +60,8 @@ func DownloadAll(params DwlParams) error {
 			return err
 		}
 
-		fmt.Println(n)
+		Logger.Info("Download finished:", destPath)
+		Logger.Debug("Downloaded", n, "bytes")
 	}
 
 	return nil
@@ -87,6 +89,7 @@ func ensureDir(dir string) error {
 		return nil
 	}
 
+	Logger.Debug("Create directory", dir)
 	mkdirErr := os.MkdirAll(dir, os.ModePerm)
 	if mkdirErr != nil {
 		return mkdirErr

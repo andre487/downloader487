@@ -7,6 +7,8 @@ import (
 )
 
 func main() {
+	SetupLogger()
+
 	argParser := argparse.NewParser("synchronizer", "Sync files from S3")
 
 	s3Endpoint := argParser.String("", "s3-endpoint", &argparse.Options{Default: "https://storage.yandexcloud.net"})
@@ -24,6 +26,8 @@ func main() {
 
 	s3Secret, err := GetSecretValue("S3_SECRET_KEY", s3SecretFile)
 	FatalOnErr(err)
+
+	Logger.Info("Start to download objects")
 
 	dwlErr := DownloadAll(DwlParams{
 		S3Endpoint:  *s3Endpoint,

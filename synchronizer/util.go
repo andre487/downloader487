@@ -25,6 +25,7 @@ func GetSecretValue(envVar string, filePath *string) (string, error) {
 		return "", err
 	}
 
+	Logger.Debug("Got secret", envVar)
 	return strings.TrimSpace(string(b)), nil
 }
 
