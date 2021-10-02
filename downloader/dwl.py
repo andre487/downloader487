@@ -1,7 +1,6 @@
-from enum import auto
-import dataclasses
 import os
 from typing import Dict, List, Optional
+
 from youtube_dl import YoutubeDL
 
 
@@ -11,9 +10,9 @@ class DownloadError(Exception):
 
 class Ydl:
     def __init__(
-        self, download_dir: str = '/tmp/downloader487',
-        params: Optional[Dict] = None, playlist: bool = False,
-        cleanup: bool = True,
+            self, download_dir: str = '/tmp/downloader487',
+            params: Optional[Dict] = None, playlist: bool = False,
+            cleanup: bool = True,
     ):
         self._download_dir = download_dir
         self._cleanup = cleanup
@@ -25,7 +24,8 @@ class Ydl:
         params.setdefault('format', 'bestvideo[ext=mp4]/bestvideo/bestaudio')
         params.setdefault('noplaylist', not playlist)
         params.update(
-            progress_hooks=[self.on_progress],
+            progress_hooks=[
+                self.on_progress],
             outtmpl=f'{self._download_dir}/%(playlist)s-%(playlist_index)s-%(title)s-%(extractor)s-%(id)s.%(ext)s',
             restrictfilenames=True,
             logtostderr=True,

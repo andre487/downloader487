@@ -1,0 +1,5 @@
+[autopep8]
+count = True
+statistics = True
+max-line-length = 120
+hang-closing = True

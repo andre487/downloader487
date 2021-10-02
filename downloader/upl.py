@@ -1,11 +1,12 @@
-import boto3
 import os
+
+import boto3
 
 
 class Uploader:
     def __init__(
-        self, s3_endpoint: str, s3_region: str, s3_bucket: str,
-        s3_access: str, s3_secret: str,
+            self, s3_endpoint: str, s3_region: str, s3_bucket: str,
+            s3_access: str, s3_secret: str,
     ) -> None:
         self._s3_bucket = s3_bucket
 
