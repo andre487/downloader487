@@ -1,10 +1,12 @@
+import logging
 import os
 from typing import Any, Dict, List, Optional, Set
 
 from youtube_dl import YoutubeDL
+from youtube_dl.utils import DownloadError, ExtractorError
 
 
-class DownloadError(Exception):
+class YdlDownloadError(Exception):
     pass
 
 
@@ -44,15 +46,24 @@ class Ydl:
                 os.unlink(file_path)
 
     def download(self, urls: List[str]) -> List[str]:
-        res_code = self._ydl.download(urls)
-        if res_code != 0:
-            raise DownloadError(f'Download result code is {res_code}')
+        errors = []
+        for url in urls:
+            try:
+                res_code = self._ydl.download([url])
+            except (DownloadError, ExtractorError) as e:
+                errors.append(e)
+                res_code = 1
+
+            if res_code != 0:
+                logging.error(f'Download error for {url}')
 
         result = list(self._current_files)
-
-        self._all_files.update(self._current_files)
         self._current_files = set()
 
+        if not result:
+            raise YdlDownloadError(f'Download result error: {errors}')
+
+        self._all_files.update(self._current_files)
         return result
 
     def on_progress(self, data: Dict) -> None:
