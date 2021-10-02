@@ -28,7 +28,7 @@ class Ydl:
         params.update(
             progress_hooks=[
                 self.on_progress],
-            outtmpl=f'{self._download_dir}/%(playlist)s-%(playlist_index)s-%(title)s-%(extractor)s-%(id)s.%(ext)s',
+            outtmpl=f'{self._download_dir}/%(extractor)s-%(playlist)s-%(playlist_index)s-%(title)s-%(id)s.%(ext)s',
             restrictfilenames=True,
             logtostderr=True,
         )
