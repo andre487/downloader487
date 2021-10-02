@@ -17,7 +17,7 @@ func main() {
 	s3AccessFile := argParser.String("", "s3-access-file", &argparse.Options{Default: "~/.tokens/s3-access"})
 	s3SecretFile := argParser.String("", "s3-secret-file", &argparse.Options{Default: "~/.tokens/s3-secret"})
 	downloadDir := argParser.String("", "download-dir", &argparse.Options{Default: "/tmp/downloader487-sync"})
-	noClearBucket := argParser.Flag("", "--no-clear-bucket", &argparse.Options{Default: false})
+	noClearBucket := argParser.Flag("", "no-clear-bucket", &argparse.Options{Default: false})
 
 	err := argParser.Parse(os.Args)
 	FatalOnErr(err)
