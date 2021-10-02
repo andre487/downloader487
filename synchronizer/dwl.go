@@ -12,12 +12,13 @@ import (
 )
 
 type DwlParams struct {
-	S3Endpoint  string
-	S3Region    string
-	S3Bucket    string
-	S3Access    string
-	S3Secret    string
-	DownloadDir string
+	S3Endpoint    string
+	S3Region      string
+	S3Bucket      string
+	S3Access      string
+	S3Secret      string
+	DownloadDir   string
+	NoClearBucket bool
 }
 
 func DownloadAll(params DwlParams) error {
@@ -32,6 +33,7 @@ func DownloadAll(params DwlParams) error {
 		Bucket: aws.String(params.S3Bucket),
 	})
 	if err != nil {
+		Logger.Error(err)
 		return err
 	}
 
@@ -44,11 +46,13 @@ func DownloadAll(params DwlParams) error {
 		Logger.Info("Download start:", destPath)
 
 		if err := ensureDir(destDir); err != nil {
+			Logger.Error(err)
 			return err
 		}
 
 		f, err := os.Create(destPath)
 		if err != nil {
+			Logger.Error(err)
 			return err
 		}
 
@@ -57,11 +61,29 @@ func DownloadAll(params DwlParams) error {
 			Key:    aws.String(*x.Key),
 		})
 		if err != nil {
+			Logger.Error(err)
 			return err
 		}
 
 		Logger.Info("Download finished:", destPath)
 		Logger.Debug("Downloaded", n, "bytes")
+	}
+
+	if params.NoClearBucket {
+		return nil
+	}
+
+	for _, x := range result.Contents {
+		_, err := client.DeleteObject(&s3.DeleteObjectInput{
+			Bucket: aws.String(params.S3Bucket),
+			Key:    aws.String(*x.Key),
+		})
+		if err != nil {
+			Logger.Error(err)
+			return err
+		}
+
+		Logger.Debug("Deleted:", *x.Key)
 	}
 
 	return nil
