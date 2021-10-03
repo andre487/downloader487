@@ -26,11 +26,16 @@ class Ydl:
         params.setdefault('format', 'bestvideo[ext=mp4]/bestvideo/bestaudio')
         params.setdefault('noplaylist', not playlist)
         params.update(
-            progress_hooks=[
-                self.on_progress],
+            progress_hooks=[self.on_progress],
             outtmpl=f'{self._download_dir}/%(extractor)s-%(playlist)s-%(playlist_index)s-%(title)s-%(id)s.%(ext)s',
             restrictfilenames=True,
             logtostderr=True,
+            usenetrc=True,
+            quiet=True,
+            ignoreerrors=True,
+            cachedir=False,
+            no_color=True,
+            logger=logging.root,
         )
 
         self._ydl = YoutubeDL(params=params, auto_init=True)
