@@ -31,7 +31,7 @@ class Ydl:
             restrictfilenames=True,
             logtostderr=True,
             usenetrc=True,
-            quiet=True,
+            quiet=False,
             ignoreerrors=True,
             cachedir=False,
             no_color=True,
