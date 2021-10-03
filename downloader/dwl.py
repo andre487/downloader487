@@ -23,7 +23,9 @@ class Ydl:
 
         os.makedirs(download_dir, exist_ok=True)
 
-        params.setdefault('format', 'bestvideo[ext=mp4]/bestvideo/bestaudio')
+        logger = logging.getLogger('ydl')
+        logger.setLevel(logging.DEBUG)
+
         params.setdefault('noplaylist', not playlist)
         params.update(
             progress_hooks=[self.on_progress],
@@ -32,10 +34,11 @@ class Ydl:
             logtostderr=True,
             usenetrc=True,
             quiet=False,
+            verbose=True,
             ignoreerrors=True,
             cachedir=False,
             no_color=True,
-            logger=logging.root,
+            logger=logger,
         )
 
         self._ydl = YoutubeDL(params=params, auto_init=True)
