@@ -27,6 +27,8 @@ class Ydl:
         logger.setLevel(logging.DEBUG)
 
         params.setdefault('noplaylist', not playlist)
+        params.setdefault('format', 'best[ext=mp4]/best')
+
         params.update(
             progress_hooks=[self.on_progress],
             outtmpl=f'{self._download_dir}/%(extractor)s-%(playlist)s-%(playlist_index)s-%(title)s-%(id)s.%(ext)s',
@@ -37,7 +39,7 @@ class Ydl:
             verbose=True,
             ignoreerrors=True,
             cachedir=False,
-            no_color=True,
+            no_color=False,
             logger=logger,
         )
 
@@ -58,24 +60,19 @@ class Ydl:
                     logging.warning(e)
 
     def download(self, urls: List[str]) -> List[str]:
-        errors = []
-        for url in urls:
-            try:
-                res_code = self._ydl.download([url])
-            except (DownloadError, ExtractorError) as e:
-                errors.append(e)
-                res_code = 1
-
-            if res_code != 0:
-                logging.error(f'Download error for {url}')
+        error = None
+        try:
+            self._ydl.download(urls)
+        except (DownloadError, ExtractorError) as e:
+            error = e
 
         result = list(self._current_files)
+        self._all_files.update(self._current_files)
         self._current_files = set()
 
         if not result:
-            raise YdlDownloadError(f'Download result error: {errors}')
+            raise YdlDownloadError(f'Download result error: {error}')
 
-        self._all_files.update(self._current_files)
         return result
 
     def on_progress(self, data: Dict) -> None:
