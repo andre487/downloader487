@@ -51,7 +51,11 @@ class Ydl:
     def __exit__(self, *_exc_info: List[Any]) -> None:
         if self._cleanup:
             for file_path in self._all_files:
-                os.unlink(file_path)
+                try:
+                    os.unlink(file_path)
+                    logging.info(f'File removed: {file_path}')
+                except OSError as e:
+                    logging.warning(e)
 
     def download(self, urls: List[str]) -> List[str]:
         errors = []
