@@ -59,9 +59,17 @@ def main(
                 s3_secret=s3_secret,
             )
 
+            error_count = 0
             for file_path in results:
                 logging.info(f'Upload {file_path}')
-                uploader.upload(file_path)
+                res = uploader.upload(file_path)
+                if not res:
+                    error_count += 1
+
+            if error_count == len(results):
+                raise Exception('No files were uploaded')
+            elif error_count:
+                logging.error('There were upload errors')
 
 
 if __name__ == '__main__':

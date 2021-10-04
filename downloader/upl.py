@@ -1,3 +1,4 @@
+import logging
 import os
 from typing import Optional
 
@@ -19,6 +20,11 @@ class Uploader:
             aws_secret_access_key=s3_secret,
         )
 
-    def upload(self, file_path: str) -> None:
+    def upload(self, file_path: str) -> bool:
+        if not os.path.exists(file_path):
+            logging.error(f'File not found: {file_path}')
+            return False
+
         s3_key = os.path.basename(file_path)
         self._client.upload_file(file_path, self._s3_bucket, s3_key)
+        return True
