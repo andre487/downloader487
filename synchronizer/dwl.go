@@ -67,18 +67,16 @@ func DownloadAll(params DwlParams) error {
 
 		Logger.Info("Download finished:", destPath)
 		Logger.Debug("Downloaded", n, "bytes")
-	}
 
-	if params.NoClearBucket {
-		return nil
-	}
+		if params.NoClearBucket {
+			continue
+		}
 
-	for _, x := range result.Contents {
-		_, err := client.DeleteObject(&s3.DeleteObjectInput{
+		_, delErr := client.DeleteObject(&s3.DeleteObjectInput{
 			Bucket: aws.String(params.S3Bucket),
 			Key:    aws.String(*x.Key),
 		})
-		if err != nil {
+		if delErr != nil {
 			Logger.Error(err)
 			return err
 		}

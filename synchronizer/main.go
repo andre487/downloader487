@@ -20,13 +20,13 @@ func main() {
 	noClearBucket := argParser.Flag("", "no-clear-bucket", &argparse.Options{Default: false})
 
 	err := argParser.Parse(os.Args)
-	FatalOnErr(err)
+	PanicOnErr(err)
 
 	s3Access, err := GetSecretValue("S3_ACCESS_KEY", s3AccessFile)
-	FatalOnErr(err)
+	PanicOnErr(err)
 
 	s3Secret, err := GetSecretValue("S3_SECRET_KEY", s3SecretFile)
-	FatalOnErr(err)
+	PanicOnErr(err)
 
 	Logger.Info("Start to download objects")
 
@@ -39,5 +39,5 @@ func main() {
 		DownloadDir:   *downloadDir,
 		NoClearBucket: *noClearBucket,
 	})
-	FatalOnErr(dwlErr)
+	PanicOnErr(dwlErr)
 }
