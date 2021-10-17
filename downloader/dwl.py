@@ -2,8 +2,8 @@ import logging
 import os
 from typing import Any, Dict, List, Optional, Set
 
-from youtube_dl import YoutubeDL
-from youtube_dl.utils import DownloadError, ExtractorError
+from yt_dlp import YoutubeDL
+from yt_dlp.utils import DownloadError, ExtractorError
 
 
 class YdlDownloadError(Exception):
